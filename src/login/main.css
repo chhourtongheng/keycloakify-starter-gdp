@@ -1,39 +1,794 @@
-body.kcBodyClass {
-    /* background: url(./../login/pages/assets/coolbackgrounds-particles-flare.png) no-repeat center center fixed; */
-    /* background: linear-gradient(to right, #fffbf0, #fdf0ca); */
-    background: radial-gradient(circle at 50% 40%, #ffffff, #fae8b4);
+@import "../shared/tokens.css";
+
+/* ------------------------------------------------------------------ base */
+
+html.gd-html,
+body.gd-body {
+    min-height: 100%;
+    margin: 0;
 }
 
-/* #kc-header-wrapper>span{
-    border: red solid 1px;
-} */
-
-#particles-js{
-    overflow-y: scroll;
-    scrollbar-width: none; 
-}
-/* #d7860c  #cccccc*/
-
-.test{
-    border: solid 1px red;
+body.gd-body {
+    background: var(--gd-bg);
+    color: var(--gd-text);
+    font-family: var(--gd-font);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
 }
 
-#kc-header-wrapper {
-    user-select: none;
+.gd-body *,
+.gd-body *::before,
+.gd-body *::after {
+    box-sizing: border-box;
 }
 
-#kc-info-wrapper{
-    background-color: transparent;
+.gd-body a {
+    color: var(--gd-link);
+    font-weight: 500;
+    text-decoration: none;
 }
 
-.card-pf{
-    background-color: rgba(187, 187, 187, 0.4);
-    border-radius: 8px;
-    border-top: 8px solid var(--pf-global--primary-color--100);
-    box-shadow: var(--pf-global--BoxShadow--md);
+.gd-body a:hover {
+    text-decoration: underline;
 }
 
-:root {
-    --pf-global--primary-color--100: #FFCA28;
-    --pf-global--primary-color--200: #d7860c;
+/* ---------------------------------------------------------------- layout
+ * Phone first: a single column with a compact brand header above the form.
+ * From 960px: amber brand panel on the left, form panel on the right
+ * (same split as the Materio "auth v2" pages the frontend is built on).
+ */
+
+.gd-auth {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 1fr auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+.gd-auth__brand {
+    display: none;
+}
+
+.gd-auth__panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    padding: 8px 16px 32px;
+    background: var(--gd-surface);
+}
+
+.gd-auth__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    min-height: 40px;
+}
+
+.gd-auth__card {
+    width: 100%;
+    max-width: 420px;
+    margin: auto 0;
+}
+
+.gd-auth__compact-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.gd-auth__compact-brand img {
+    width: 72px;
+    height: 72px;
+}
+
+.gd-auth__compact-brand .gd-khmer-title {
+    color: var(--gd-text);
+    font-size: 0.875rem;
+}
+
+.gd-auth__footer {
+    grid-column: 1 / -1;
+}
+
+@media (min-width: 600px) {
+    .gd-auth__panel {
+        padding: 16px 32px 48px;
+        background: var(--gd-bg);
+    }
+
+    .gd-auth__card {
+        padding: 32px;
+        border-radius: var(--gd-radius-lg);
+        background: var(--gd-surface);
+        box-shadow: var(--gd-shadow-md);
+    }
+}
+
+@media (min-width: 960px) {
+    .gd-auth {
+        grid-template-columns: minmax(0, 1fr) minmax(440px, 36%);
+    }
+
+    .gd-auth__brand {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: radial-gradient(
+                circle at 50% 42%,
+                rgba(255, 255, 255, 0.55),
+                transparent 55%
+            ),
+            linear-gradient(160deg, #ffe082 0%, var(--gd-primary) 48%, #f2b200 100%);
+    }
+
+    .gd-auth__panel {
+        padding: 16px 48px 48px;
+        background: var(--gd-surface);
+        box-shadow: var(--gd-shadow-lg);
+    }
+
+    .gd-auth__card {
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .gd-auth__compact-brand {
+        display: none;
+    }
+}
+
+@media (prefers-color-scheme: dark) and (min-width: 960px) {
+    .gd-auth__brand {
+        background: radial-gradient(
+                circle at 50% 42%,
+                rgba(255, 202, 40, 0.28),
+                transparent 60%
+            ),
+            linear-gradient(160deg, #2a2418 0%, #1a1712 100%);
+    }
+
+    .gd-auth__brand-title {
+        color: #fff !important;
+    }
+}
+
+.gd-auth__particles {
+    position: absolute;
+    inset: 0;
+}
+
+.gd-auth__particles canvas {
+    display: block;
+}
+
+.gd-auth__brand-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding: 48px;
+    pointer-events: none;
+}
+
+.gd-auth__logo-ring {
+    display: grid;
+    place-items: center;
+    width: 208px;
+    height: 208px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 10px 30px rgba(46, 38, 61, 0.18);
+}
+
+.gd-auth__logo-ring img {
+    width: 168px;
+    height: 168px;
+}
+
+.gd-auth__brand-title {
+    color: #2e263d;
+    font-size: clamp(1.25rem, 1.6vw + 0.5rem, 1.75rem);
+}
+
+/* ---------------------------------------------------------------- header */
+
+.gd-auth__header {
+    margin-bottom: 24px;
+}
+
+.gd-auth__title {
+    margin: 0;
+    color: var(--gd-text);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.gd-auth__subtitle {
+    margin: 6px 0 0;
+    color: var(--gd-text-muted);
+}
+
+.gd-auth__required {
+    margin: 8px 0 0;
+    color: var(--gd-text-muted);
+    font-size: 0.8125rem;
+}
+
+.gd-body .required {
+    color: var(--gd-error-text);
+}
+
+.gd-auth__username {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 8px 8px 16px;
+    border: 1px solid var(--gd-border);
+    border-radius: 50px;
+}
+
+.gd-auth__username label {
+    overflow: hidden;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gd-auth__username a {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: var(--gd-text-muted);
+}
+
+.gd-auth__username a:hover {
+    background: var(--gd-hover);
+}
+
+/* ------------------------------------------------------------------ form */
+
+.gd-auth__card form {
+    margin: 0;
+}
+
+.gd-field {
+    margin-bottom: 20px;
+}
+
+.gd-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 16px;
+}
+
+.gd-label,
+.gd-auth__card :where(label:not(.gd-check__label, #kc-attempted-username)) {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: var(--gd-text-muted);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.gd-input,
+.gd-auth__card
+    input:is(
+        [type="text"],
+        [type="email"],
+        [type="password"],
+        [type="tel"],
+        [type="number"],
+        [type="url"],
+        [type="date"]
+    ),
+.gd-auth__card select,
+.gd-auth__card textarea {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    margin: 0;
+    padding: 12px 16px;
+    border: 1px solid var(--gd-border);
+    border-radius: var(--gd-radius);
+    background: var(--gd-input-bg);
+    color: var(--gd-text);
+    font: inherit;
+    /* 16px stops iOS Safari from zooming into the field on focus. */
+    font-size: 1rem;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+    appearance: none;
+}
+
+.gd-auth__card select {
+    padding-inline-end: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23887f99' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+}
+
+.gd-textarea,
+.gd-auth__card textarea {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.gd-input:hover,
+.gd-auth__card :is(input, select, textarea):hover {
+    border-color: var(--gd-border-hover);
+}
+
+.gd-input:focus,
+.gd-auth__card :is(input, select, textarea):focus {
+    border-color: var(--gd-primary-dark);
+    outline: none;
+    box-shadow: 0 0 0 1px var(--gd-primary-dark);
+}
+
+.gd-auth__card :is(input, select, textarea):disabled {
+    color: var(--gd-text-disabled);
+    border-style: dashed;
+}
+
+.gd-auth__card [aria-invalid="true"],
+.gd-field--error .gd-input {
+    border-color: var(--gd-error);
+}
+
+.gd-auth__card [aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 1px var(--gd-error);
+}
+
+.gd-field-error {
+    display: block;
+    margin-top: 6px;
+    color: var(--gd-error-text);
+    font-size: 0.8125rem;
+}
+
+.gd-helper {
+    display: block;
+    margin-top: 4px;
+    color: var(--gd-text-muted);
+    font-size: 0.8125rem;
+}
+
+.gd-input-group {
+    position: relative;
+}
+
+.gd-input-group .gd-input {
+    padding-inline-end: 52px;
+}
+
+.gd-input-adornment {
+    position: absolute;
+    top: 50%;
+    inset-inline-end: 4px;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--gd-text-muted);
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+
+.gd-input-adornment:hover {
+    background: var(--gd-hover);
+}
+
+/* Checkboxes & radios ("checkbox" is the plain wrapper Keycloak pages use). */
+.gd-auth__card .checkbox label,
+.gd-check__label,
+.gd-auth__card .gd-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    margin: 0;
+    color: var(--gd-text);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.gd-auth__card input:is([type="checkbox"], [type="radio"]) {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--gd-primary-dark);
+    cursor: pointer;
+}
+
+.gd-check__label--disabled {
+    opacity: 0.5;
+}
+
+.gd-form-settings,
+.gd-auth__card #kc-form-options + .gd-form-options-end,
+.gd-auth__card .gd-form-settings {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px 16px;
+}
+
+.gd-form-settings > .gd-form-buttons {
+    flex-basis: 100%;
+}
+
+/* --------------------------------------------------------------- buttons */
+
+.gd-btn,
+.gd-auth__card :where(input[type="submit"], button[type="submit"]:not(.gd-link-button)) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    margin: 0;
+    padding: 8px 20px;
+    border: 1px solid transparent;
+    border-radius: var(--gd-radius);
+    background: var(--gd-primary);
+    color: var(--gd-on-primary);
+    font: inherit;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+    box-shadow: var(--gd-shadow-sm);
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        box-shadow 0.15s ease;
+    -webkit-appearance: none;
+}
+
+.gd-btn:hover,
+.gd-auth__card
+    :where(input[type="submit"], button[type="submit"]:not(.gd-link-button)):hover {
+    background: var(--gd-primary-hover);
+    text-decoration: none;
+    box-shadow: var(--gd-shadow-md);
+}
+
+.gd-btn:disabled,
+.gd-auth__card :where(input[type="submit"]):disabled {
+    opacity: 0.6;
+    cursor: progress;
+    box-shadow: none;
+}
+
+.gd-btn--outlined,
+.gd-auth__card .gd-btn--outlined {
+    border-color: var(--gd-border);
+    background: transparent;
+    color: var(--gd-text);
+    box-shadow: none;
+}
+
+.gd-btn--outlined:hover,
+.gd-auth__card .gd-btn--outlined:hover {
+    border-color: var(--gd-primary-dark);
+    background: rgba(var(--gd-primary-rgb), 0.08);
+    box-shadow: none;
+}
+
+.gd-btn--lg,
+.gd-auth__card :where(input[type="submit"]) {
+    min-height: 48px;
+    font-size: 1rem;
+}
+
+.gd-btn--block {
+    width: 100%;
+}
+
+.gd-form-buttons,
+.gd-auth__card #kc-form-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.gd-form-buttons > :is(input, button):not(.gd-btn--block) {
+    flex: 1 1 140px;
+}
+
+.gd-link-button {
+    padding: 8px 0;
+    border: 0;
+    background: none;
+    color: var(--gd-link);
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.gd-link-button:hover {
+    text-decoration: underline;
+}
+
+.gd-try-another {
+    margin-top: 16px;
+    text-align: center;
+}
+
+/* ---------------------------------------------------------------- alerts */
+
+.gd-alert {
+    --gd-alert-rgb: var(--gd-info-rgb);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    border-radius: var(--gd-radius);
+    background: rgba(var(--gd-alert-rgb), 0.16);
+    color: var(--gd-text);
+    font-size: 0.9375rem;
+}
+
+.gd-alert__icon {
+    flex: none;
+    color: rgb(var(--gd-alert-rgb));
+}
+
+.gd-alert--success,
+.gd-alert.alert-success {
+    --gd-alert-rgb: var(--gd-success-rgb);
+}
+
+.gd-alert--warning,
+.gd-alert.alert-warning {
+    --gd-alert-rgb: var(--gd-warning-rgb);
+}
+
+.gd-alert--error,
+.gd-alert.alert-error {
+    --gd-alert-rgb: var(--gd-error-rgb);
+}
+
+/* --------------------------------------------- sign-up / info / social */
+
+.gd-signup {
+    margin-top: 24px;
+    color: var(--gd-text-muted);
+    text-align: center;
+}
+
+.gd-signup p {
+    margin: 0 0 8px;
+}
+
+.gd-social {
+    margin-top: 24px;
+}
+
+.gd-social hr {
+    display: none;
+}
+
+.gd-social h2 {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 0 0 16px;
+    color: var(--gd-text-muted);
+    font-size: 0.9375rem;
+    font-weight: 400;
+}
+
+.gd-social h2::before,
+.gd-social h2::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid var(--gd-divider);
+}
+
+.gd-social__list {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+@media (min-width: 400px) {
+    .gd-social__list--grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.gd-social__btn {
+    min-height: 44px;
+}
+
+/* ------------------------------------------- select authenticator / OTP */
+
+.gd-select-auth {
+    display: grid;
+    gap: 12px;
+}
+
+.gd-select-auth__item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 16px;
+    border: 1px solid var(--gd-border);
+    border-radius: var(--gd-radius);
+    background: transparent;
+    color: var(--gd-text);
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+}
+
+.gd-select-auth__item:hover {
+    border-color: var(--gd-primary-dark);
+    background: rgba(var(--gd-primary-rgb), 0.08);
+}
+
+.gd-select-auth__icon .gd-icon {
+    width: 28px;
+    height: 28px;
+}
+
+.gd-select-auth__body {
+    flex: 1;
+}
+
+.gd-select-auth__heading {
+    font-weight: 600;
+}
+
+.gd-select-auth__desc {
+    color: var(--gd-text-muted);
+    font-size: 0.875rem;
+}
+
+.gd-otp-tile {
+    display: block;
+    margin-bottom: 12px;
+}
+
+.gd-otp-tile__input {
+    position: absolute;
+    opacity: 0;
+}
+
+.gd-otp-tile__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--gd-border);
+    border-radius: var(--gd-radius);
+    cursor: pointer;
+}
+
+.gd-otp-tile__input:checked + .gd-otp-tile__header,
+.gd-otp-tile__input:checked + label .gd-otp-tile__header {
+    border-color: var(--gd-primary-dark);
+    background: rgba(var(--gd-primary-rgb), 0.12);
+}
+
+.gd-otp-tile__input:focus-visible + .gd-otp-tile__header {
+    outline: 2px solid var(--gd-primary-dark);
+}
+
+/* Recovery codes, terms and other default pages. */
+.gd-auth__card ol,
+.gd-auth__card ul:not(.gd-social__list) {
+    padding-inline-start: 20px;
+}
+
+.gd-auth__card img {
+    max-width: 100%;
+    height: auto;
+}
+
+.gd-auth__card pre,
+.kc-recovery-codes-list {
+    overflow-x: auto;
+}
+
+/* ----------------------------------------------------------------- icons
+ * Icons referenced by Keycloak class keys (password visibility, feedback,
+ * authenticators) are drawn with CSS masks so no icon font is needed.
+ */
+
+.gd-icon {
+    display: inline-block;
+    flex: none;
+    width: 20px;
+    height: 20px;
+    background-color: currentColor;
+    vertical-align: middle;
+    -webkit-mask: var(--gd-icon) center / contain no-repeat;
+    mask: var(--gd-icon) center / contain no-repeat;
+}
+
+.gd-icon--eye {
+    --gd-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E");
+}
+
+.gd-icon--eye-off {
+    --gd-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-2.6 3.5M6.6 6.6C3.7 8.4 2 12 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18'/%3E%3C/svg%3E");
+}
+
+.gd-icon--success {
+    --gd-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M8 12l3 3 5-6'/%3E%3C/svg%3E");
+    color: var(--gd-success);
+}
+
+.gd-icon--error {
+    --gd-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7v6M12 16.5v.5'/%3E%3C/svg%3E");
+    color: var(--gd-error);
+}
+
+.gd-icon--warning {
+    --gd-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l10 18H2zM12 10v5M12 18v.5'/%3E%3C/svg%3E");
+    color: var(--gd-warning);
+}
+
+.gd-icon--info {
+    --gd-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11v6M12 7.5v.5'/%3E%3C/svg%3E");
+    color: var(--gd-info);
+}
+
+.gd-icon--restart {
+    --gd-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 1 0 3-6.7M3 4v5h5'/%3E%3C/svg%3E");
+}
+
+.gd-icon--chevron-right {
+    --gd-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");
+}
+
+.gd-icon--key {
+    --gd-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='8' cy='15' r='4'/%3E%3Cpath d='M10.8 12.2L20 3M17 6l3 3M14.5 8.5l2 2'/%3E%3C/svg%3E");
+}
+
+.gd-icon--lock {
+    --gd-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E");
+}
+
+.gd-icon--phone {
+    --gd-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='6' y='2' width='12' height='20' rx='2'/%3E%3Cpath d='M11 18h2'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gd-body * {
+        transition: none !important;
+    }
 }

@@ -1,12 +1,10 @@
 import type { JSX } from "keycloakify/tools/JSX";
-import { useEffect } from "react";
 import { useIsPasswordRevealed } from "keycloakify/tools/useIsPasswordRevealed";
 import { kcSanitize } from "keycloakify/lib/kcSanitize";
 import { getKcClsx, type KcClsx } from "keycloakify/login/lib/kcClsx";
 import type { PageProps } from "keycloakify/login/pages/PageProps";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
-import particlesConfig from "./../../config/particlesjs-config.json";
 
 export default function LoginUpdatePassword(props: PageProps<Extract<KcContext, { pageId: "login-update-password.ftl" }>, I18n>) {
     const { kcContext, i18n, doUseDefaultCss, Template, classes } = props;
@@ -16,127 +14,111 @@ export default function LoginUpdatePassword(props: PageProps<Extract<KcContext, 
         classes
     });
 
-    useEffect(() => {
-        const script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js";
-        script.async = true;
-        script.onload = () => {
-            if (window.particlesJS) {
-                window.particlesJS("particles-js", particlesConfig);
-            }
-        };
-        document.body.appendChild(script);
-        return () => {
-            document.body.removeChild(script);
-        };
-    }, []);
-
     const { msg, msgStr } = i18n;
 
     const { url, messagesPerField, isAppInitiatedAction } = kcContext;
 
     return (
         <>
-        <div id="particles-js" style={{ position: "absolute", width: "100%", height: "100%", zIndex: -1 }}></div>
-        <Template
-            kcContext={kcContext}
-            i18n={i18n}
-            doUseDefaultCss={doUseDefaultCss}
-            classes={classes}
-            displayMessage={!messagesPerField.existsError("password", "password-confirm")}
-            headerNode={msg("updatePasswordTitle")}
-        >
-            <form id="kc-passwd-update-form" className={kcClsx("kcFormClass")} action={url.loginAction} method="post">
-                <div className={kcClsx("kcFormGroupClass")}>
-                    <div className={kcClsx("kcLabelWrapperClass")}>
-                        <label htmlFor="password-new" className={kcClsx("kcLabelClass")}>
-                            {msg("passwordNew")}
-                        </label>
-                    </div>
-                    <div className={kcClsx("kcInputWrapperClass")}>
-                        <PasswordWrapper kcClsx={kcClsx} i18n={i18n} passwordInputId="password-new">
-                            <input
-                                type="password"
-                                id="password-new"
-                                name="password-new"
-                                className={kcClsx("kcInputClass")}
-                                autoFocus
-                                autoComplete="new-password"
-                                aria-invalid={messagesPerField.existsError("password", "password-confirm")}
-                            />
-                        </PasswordWrapper>
+            <Template
+                kcContext={kcContext}
+                i18n={i18n}
+                doUseDefaultCss={doUseDefaultCss}
+                classes={classes}
+                displayMessage={!messagesPerField.existsError("password", "password-confirm")}
+                headerNode={msg("updatePasswordTitle")}
+            >
+                <form id="kc-passwd-update-form" className={kcClsx("kcFormClass")} action={url.loginAction} method="post">
+                    <div className={kcClsx("kcFormGroupClass")}>
+                        <div className={kcClsx("kcLabelWrapperClass")}>
+                            <label htmlFor="password-new" className={kcClsx("kcLabelClass")}>
+                                {msg("passwordNew")}
+                            </label>
+                        </div>
+                        <div className={kcClsx("kcInputWrapperClass")}>
+                            <PasswordWrapper kcClsx={kcClsx} i18n={i18n} passwordInputId="password-new">
+                                <input
+                                    type="password"
+                                    id="password-new"
+                                    name="password-new"
+                                    className={kcClsx("kcInputClass")}
+                                    autoFocus
+                                    autoComplete="new-password"
+                                    aria-invalid={messagesPerField.existsError("password", "password-confirm")}
+                                />
+                            </PasswordWrapper>
 
-                        {messagesPerField.existsError("password") && (
-                            <span
-                                id="input-error-password"
-                                className={kcClsx("kcInputErrorMessageClass")}
-                                aria-live="polite"
-                                dangerouslySetInnerHTML={{
-                                    __html: kcSanitize(messagesPerField.get("password"))
-                                }}
-                            />
-                        )}
-                    </div>
-                </div>
-
-                <div className={kcClsx("kcFormGroupClass")}>
-                    <div className={kcClsx("kcLabelWrapperClass")}>
-                        <label htmlFor="password-confirm" className={kcClsx("kcLabelClass")}>
-                            {msg("passwordConfirm")}
-                        </label>
-                    </div>
-                    <div className={kcClsx("kcInputWrapperClass")}>
-                        <PasswordWrapper kcClsx={kcClsx} i18n={i18n} passwordInputId="password-confirm">
-                            <input
-                                type="password"
-                                id="password-confirm"
-                                name="password-confirm"
-                                className={kcClsx("kcInputClass")}
-                                autoFocus
-                                autoComplete="new-password"
-                                aria-invalid={messagesPerField.existsError("password", "password-confirm")}
-                            />
-                        </PasswordWrapper>
-
-                        {messagesPerField.existsError("password-confirm") && (
-                            <span
-                                id="input-error-password-confirm"
-                                className={kcClsx("kcInputErrorMessageClass")}
-                                aria-live="polite"
-                                dangerouslySetInnerHTML={{
-                                    __html: kcSanitize(messagesPerField.get("password-confirm"))
-                                }}
-                            />
-                        )}
-                    </div>
-                </div>
-                <div className={kcClsx("kcFormGroupClass")}>
-                    <LogoutOtherSessions kcClsx={kcClsx} i18n={i18n} />
-                    <div id="kc-form-buttons" className={kcClsx("kcFormButtonsClass")}>
-                        <input
-                            className={kcClsx(
-                                "kcButtonClass",
-                                "kcButtonPrimaryClass",
-                                !isAppInitiatedAction && "kcButtonBlockClass",
-                                "kcButtonLargeClass"
+                            {messagesPerField.existsError("password") && (
+                                <span
+                                    id="input-error-password"
+                                    className={kcClsx("kcInputErrorMessageClass")}
+                                    aria-live="polite"
+                                    dangerouslySetInnerHTML={{
+                                        __html: kcSanitize(messagesPerField.get("password"))
+                                    }}
+                                />
                             )}
-                            type="submit"
-                            value={msgStr("doSubmit")}
-                        />
-                        {isAppInitiatedAction && (
-                            <button
-                                className={kcClsx("kcButtonClass", "kcButtonDefaultClass", "kcButtonLargeClass")}
-                                type="submit"
-                                name="cancel-aia"
-                                value="true"
-                            >
-                                {msg("doCancel")}
-                            </button>
-                        )}
+                        </div>
                     </div>
-                </div>
-            </form>
-        </Template>
+
+                    <div className={kcClsx("kcFormGroupClass")}>
+                        <div className={kcClsx("kcLabelWrapperClass")}>
+                            <label htmlFor="password-confirm" className={kcClsx("kcLabelClass")}>
+                                {msg("passwordConfirm")}
+                            </label>
+                        </div>
+                        <div className={kcClsx("kcInputWrapperClass")}>
+                            <PasswordWrapper kcClsx={kcClsx} i18n={i18n} passwordInputId="password-confirm">
+                                <input
+                                    type="password"
+                                    id="password-confirm"
+                                    name="password-confirm"
+                                    className={kcClsx("kcInputClass")}
+                                    autoFocus
+                                    autoComplete="new-password"
+                                    aria-invalid={messagesPerField.existsError("password", "password-confirm")}
+                                />
+                            </PasswordWrapper>
+
+                            {messagesPerField.existsError("password-confirm") && (
+                                <span
+                                    id="input-error-password-confirm"
+                                    className={kcClsx("kcInputErrorMessageClass")}
+                                    aria-live="polite"
+                                    dangerouslySetInnerHTML={{
+                                        __html: kcSanitize(messagesPerField.get("password-confirm"))
+                                    }}
+                                />
+                            )}
+                        </div>
+                    </div>
+                    <div className={kcClsx("kcFormGroupClass")}>
+                        <LogoutOtherSessions kcClsx={kcClsx} i18n={i18n} />
+                        <div id="kc-form-buttons" className={kcClsx("kcFormButtonsClass")}>
+                            <input
+                                className={kcClsx(
+                                    "kcButtonClass",
+                                    "kcButtonPrimaryClass",
+                                    !isAppInitiatedAction && "kcButtonBlockClass",
+                                    "kcButtonLargeClass"
+                                )}
+                                type="submit"
+                                value={msgStr("doSubmit")}
+                            />
+                            {isAppInitiatedAction && (
+                                <button
+                                    className={kcClsx("kcButtonClass", "kcButtonDefaultClass", "kcButtonLargeClass")}
+                                    type="submit"
+                                    name="cancel-aia"
+                                    value="true"
+                                >
+                                    {msg("doCancel")}
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </form>
+            </Template>
         </>
     );
 }

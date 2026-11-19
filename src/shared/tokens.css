@@ -1,0 +1,153 @@
+/*
+ * Design tokens mirroring gdhr-gdp-web (Vuetify / Materio theme):
+ * src/plugins/vuetify/theme.js and src/@core/scss/template/libs/vuetify/_variables.scss
+ */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kantumruy+Pro:wght@400;500;600&family=Moul&display=swap");
+
+:root {
+    color-scheme: light;
+
+    --gd-primary: #ffca28;
+    --gd-primary-hover: #f5bd12;
+    --gd-primary-dark: #dba810;
+    --gd-primary-rgb: 255, 202, 40;
+    /* White on #FFCA28 is 1.5:1; dark text gives 9.4:1 and matches the app footer. */
+    --gd-on-primary: #2e263d;
+    --gd-link: #8a6300;
+    --gd-footer-bg: #f6d14f;
+
+    --gd-bg: #f4f5fa;
+    --gd-surface: #ffffff;
+    --gd-on-surface-rgb: 46, 38, 61;
+    --gd-text: rgba(var(--gd-on-surface-rgb), 0.9);
+    --gd-text-muted: rgba(var(--gd-on-surface-rgb), 0.7);
+    --gd-text-disabled: rgba(var(--gd-on-surface-rgb), 0.4);
+    --gd-border: rgba(var(--gd-on-surface-rgb), 0.22);
+    --gd-border-hover: rgba(var(--gd-on-surface-rgb), 0.6);
+    --gd-divider: rgba(var(--gd-on-surface-rgb), 0.12);
+    --gd-hover: rgba(var(--gd-on-surface-rgb), 0.04);
+    --gd-input-bg: transparent;
+
+    --gd-success: #56ca00;
+    --gd-success-rgb: 86, 202, 0;
+    --gd-info: #16b1ff;
+    --gd-info-rgb: 22, 177, 255;
+    --gd-warning: #ffb400;
+    --gd-warning-rgb: 255, 180, 0;
+    --gd-error: #ff4c51;
+    --gd-error-text: #d4282d;
+    --gd-error-rgb: 255, 76, 81;
+
+    --gd-radius: 6px;
+    --gd-radius-lg: 8px;
+    --gd-shadow-sm: 0 2px 4px rgba(var(--gd-on-surface-rgb), 0.16);
+    --gd-shadow-md: 0 4px 10px rgba(var(--gd-on-surface-rgb), 0.15);
+    --gd-shadow-lg: 0 6px 16px rgba(var(--gd-on-surface-rgb), 0.22);
+
+    --gd-font: "Inter", "Kantumruy Pro", "Noto Sans Khmer", -apple-system,
+        BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --gd-font-display: "Moul", "Kantumruy Pro", serif;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+        --gd-link: #ffca28;
+        --gd-bg: #121212;
+        --gd-surface: #1e1e1e;
+        --gd-on-surface-rgb: 231, 227, 252;
+        --gd-error-text: #ff7b7f;
+        --gd-input-bg: transparent;
+        --gd-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+        --gd-shadow-md: 0 4px 10px rgba(0, 0, 0, 0.45);
+        --gd-shadow-lg: 0 6px 16px rgba(0, 0, 0, 0.5);
+    }
+}
+
+.gd-footer {
+    padding: 10px 16px;
+    background: var(--gd-footer-bg);
+    color: #000;
+    font-family: var(--gd-font-display);
+    font-size: 12px;
+    line-height: 1.9;
+    text-align: center;
+}
+
+.gd-khmer-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: var(--gd-font-display);
+    line-height: 2;
+    text-align: center;
+}
+
+.gd-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+/* Language picker built on <details>, works without JavaScript. */
+.gd-locale {
+    position: relative;
+}
+
+.gd-locale > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 6px 10px;
+    border-radius: var(--gd-radius);
+    color: var(--gd-text-muted);
+    font-size: 0.875rem;
+    cursor: pointer;
+    list-style: none;
+}
+
+.gd-locale > summary::-webkit-details-marker {
+    display: none;
+}
+
+.gd-locale > summary:hover {
+    background: var(--gd-hover);
+}
+
+.gd-locale ul {
+    position: absolute;
+    z-index: 20;
+    inset-inline-end: 0;
+    top: calc(100% + 4px);
+    min-width: 180px;
+    max-height: 60vh;
+    margin: 0;
+    padding: 8px 0;
+    overflow-y: auto;
+    border-radius: var(--gd-radius);
+    background: var(--gd-surface);
+    box-shadow: var(--gd-shadow-lg);
+    list-style: none;
+}
+
+.gd-locale a {
+    display: block;
+    padding: 8px 20px;
+    color: var(--gd-text);
+    font-size: 0.9375rem;
+    text-decoration: none;
+}
+
+.gd-locale a:hover,
+.gd-locale a[aria-current="true"] {
+    background: rgba(var(--gd-primary-rgb), 0.16);
+}
+
+:focus-visible {
+    outline: 2px solid var(--gd-primary-dark);
+    outline-offset: 2px;
+}
